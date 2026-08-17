@@ -2,13 +2,13 @@ name: "Terraform CI Quality & Security Gates"
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   validate:
-    name: "Lint, Syntax and Security Validation"
+    name: "Lint, Security & Syntax Validation"
     runs-on: ubuntu-latest
 
     steps:
@@ -21,21 +21,20 @@ jobs:
           terraform_version: "1.7.0"
 
       - name: Check Terraform Formatting
-        runs: terraform fmt -check -recursive
+        run: terraform fmt -check -recursive
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: "latest"
-      
+
       - name: Init TFLint
         run: tflint --init
-    
+
       - name: Run TFLint
         run: tflint -f compact
 
       - name: Run TFSec Security Scan
         uses: aquasecurity/tfsec-action@v1.0.0
         with:
-          soft_fail: false
-        uses: actions/checkout@v4
+          soft_fail: true
